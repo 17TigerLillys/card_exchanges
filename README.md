@@ -1,11 +1,11 @@
 # card_exchanges
 This contains the code needed to clean and process the results of a google survey and then assign people to groups for several card exchanges
 
-# Parameters to pass:
- 	Type: Pets & Parents or All Alumns (the latter will have additional columns)
-	Stage: 1-4 or stage names
+## Parameters to pass:
+ 	**Type:** Pets & Parents or All Alumns (the latter will have additional columns)
+	**Stage:** 1-4 or stage names
 
-# STAGES:
+## Stages:
 	0.5) When you paste from google be sure to 'paste special' and then select 'text' 
 			to avoid the issue with international addresses in multiple cells!!!!
 	1) Early fixes:
@@ -28,7 +28,7 @@ This contains the code needed to clean and process the results of a google surve
 		Outputs: master spreadsheet with groups labeled
 				individual spreadsheets for each group in a folder
 
-# Stage 1:
+### Stage 1:
  	* Change the column headers from Google's questions to shorter names
 	* Identify issues:
 		A1 is blank but not international/used A2 wrong
@@ -38,19 +38,24 @@ This contains the code needed to clean and process the results of a google surve
 	* Shorten any data (non-religious, non-sending members)
  	* Fix the zip codes
 
-# Stage 1.5:
+### Stage 1.5:
  	* Fill in blank A1's
-	* 
 
-# Stage 4:
-#---------
+### Stage 4:
  	* Re-run determine location to update anyone I added manually? Either that or change it 
 		myself
 	* Evenly distribute the international members
 	* Put people into non-religious and/or religious groups
 	* Evenly distribute the non-sending members!!
 
-# Desired columns: 
+## Columns: 
 preferred_email, envelope_name, address_one, address_two, city, state, clean_zip, international_address, non_sending, non-religious, other_info, gmail_address,
-# Additional columns for all alumns: 
+### Additional columns for all alumns: 
 class year, houses	
+
+
+
+
+
+
+
