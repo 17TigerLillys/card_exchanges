@@ -5,7 +5,7 @@ This contains the code needed to clean and process the results of a google surve
 `python ./card_exchanges/card_exchanges.py -type petsParents -stage 1  -newData "./data_to_run.xlsx"`
 
 ## Parameters to pass:
-* **type:** Pets & Parents or All Alumns (the latter will have additional columns)
+* **type:** petsParents or allAlumns (the latter will have additional columns)
 * **stage:** 1-4
 * **newData:** File path to the data you want to clean
 * **oldData:** Optional file path of the old data for Stage 3
