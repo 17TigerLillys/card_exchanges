@@ -4,7 +4,6 @@ import pandas as pd # if you install more than a few packages make a dev environ
 import math
 from fuzzywuzzy import fuzz, process
 import argparse
-	
 
 fourZipStates = ['MA', 'CT', 'NH', 'VT', 'RI', 'NJ', 'ME']
 def cleanZips(zipCode, state):
@@ -48,10 +47,13 @@ parser.add_argument('-old','--oldData', help='Optional file path of the old data
 args = vars(parser.parse_args())
 
 
-newDF = pd.read_excel(args['newData'], sheet_name=None) 
+newDict = pd.read_excel(args['newData'], sheet_name=None)
+newDF = pd.concat(newDict.values(), names=newDict.keys()) # To-Do figure out how to get rid of this step
+
 # print(newDF.columns)
 if args['stage'] == '3':
-	oldDF = pd.read_excel(args['oldData'], sheet_name=None)
+	oldDict = pd.read_excel(args['oldData'], sheet_name=None)
+	oldDF = pd.concat(oldDict.values(), names=oldDict.keys())
 	# if (newDF["Email"] != newDF["Email Address"]) == True:
 	# 	print(newDF["Email"], newDF["Email Address"])
 	# print(newDF[newDF['Email'] != newDF['Email Address']]['Email'], newDF[newDF['Email'] != newDF['Email Address']]['Email Address'])
@@ -59,21 +61,21 @@ if args['stage'] == '3':
 
 # Gut check to show any different emails
 #---------------------------------------
-# This should be a lambda function!!!!!!!!!!!!!
+# To-Do: make this a lambda function!!!!!!!!!!!!!
 # for index, row in newDF.iterrows():
 # 	if row['Email'] != row['Email Address']:
 # 		print(row['Email Address'], '\t', row['Email'])
 
 
 
-if args['stage'] == '1' or args['stage'] == 2:
+# if args['stage'] == '1' or args['stage'] == 2:
 	# Fix the messed up zip codes
 	#----------------------------
-	newDF['cleanZip'] = newDF.apply(lambda x: cleanZips(x.Zip_Code, x.State), axis=1)
+	# newDF['cleanZip'] = newDF.apply(lambda x: cleanZips(x.Zip_Code, x.State), axis=1) # once you fix this change the lines below to use clean zip
 
 
 	# Create a new column for location and those that need to be manually fixed 
-	newDF['location'] = newDF.apply(lambda x: determineLocation(x.City, x.State, x.cleanZip, x.international_address, x.envelope_name), axis=1)
+	# newDF['location'] = newDF.apply(lambda x: determineLocation(x.City, x.State, x.cleanZip, x.international_address, x.envelope_name), axis=1)
 
 if args['stage'] == '2':
 	# Check for duplicates
@@ -86,10 +88,11 @@ if args['stage'] == '2':
 	# Next check by zip code to catch anyone who signed up with a different email address
 	# to-do: Try fuzzy string matching on address line 1!!!!!
 	#		Internationals will need to use international_address
-	catZipDupes = newDF[newDF.duplicated('cleanZip', keep=False)].sort_values(['Zip_Code', 'envelope_name'])
+	# catZipDupes = newDF[newDF.duplicated('cleanZip', keep=False)].sort_values(['Zip_Code', 'envelope_name'])
+	catZipDupes = newDF[newDF.duplicated('Zip_Code', keep=False)].sort_values(['Zip_Code', 'envelope_name'])
 	if not catZipDupes.empty:
 		print('You may have duplicates by zip code, check!')
-		print(catZipDupes[['envelope_name', 'cleanZip']])
+		print(catZipDupes[['envelope_name', 'Address Line 1', 'Zip_Code']])
 
 if args['stage'] == '3':
 	# Check new emails against the emails from last year
