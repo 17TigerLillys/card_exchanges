@@ -1,11 +1,12 @@
 # Validate the addresses?
 
-import pandas as pd # if you install more than a few packages make a dev environment!!
+import pandas as pd 
 import math
 from fuzzywuzzy import fuzz, process
 import argparse
 
 fourZipStates = ['MA', 'CT', 'NH', 'VT', 'RI', 'NJ', 'ME']
+# we might be able to avoid this by importing it into excel better but for now this works
 def cleanZips(zipCode, state):
 	if not math.isnan(zipCode):
 		zipCode = int(zipCode) # cast them to an int
@@ -68,14 +69,14 @@ if args['stage'] == '3':
 
 
 
-# if args['stage'] == '1' or args['stage'] == 2:
+if args['stage'] == '1' or args['stage'] == 2:
 	# Fix the messed up zip codes
 	#----------------------------
-	# newDF['cleanZip'] = newDF.apply(lambda x: cleanZips(x.Zip_Code, x.State), axis=1) # once you fix this change the lines below to use clean zip
+	newDF['cleanZip'] = newDF.apply(lambda x: cleanZips(x.Zip_Code, x.State), axis=1) # once you fix this change the lines below to use clean zip
 
 
 	# Create a new column for location and those that need to be manually fixed 
-	# newDF['location'] = newDF.apply(lambda x: determineLocation(x.City, x.State, x.cleanZip, x.international_address, x.envelope_name), axis=1)
+	newDF['location'] = newDF.apply(lambda x: determineLocation(x.City, x.State, x.cleanZip, x.international_address, x.envelope_name), axis=1)
 
 if args['stage'] == '2':
 	# Check for duplicates
@@ -88,11 +89,10 @@ if args['stage'] == '2':
 	# Next check by zip code to catch anyone who signed up with a different email address
 	# to-do: Try fuzzy string matching on address line 1!!!!!
 	#		Internationals will need to use international_address
-	# catZipDupes = newDF[newDF.duplicated('cleanZip', keep=False)].sort_values(['Zip_Code', 'envelope_name'])
-	catZipDupes = newDF[newDF.duplicated('Zip_Code', keep=False)].sort_values(['Zip_Code', 'envelope_name'])
+	catZipDupes = newDF[newDF.duplicated('cleanZip', keep=False)].sort_values(['Zip_Code', 'envelope_name'])
 	if not catZipDupes.empty:
 		print('You may have duplicates by zip code, check!')
-		print(catZipDupes[['envelope_name', 'Address Line 1', 'Zip_Code']])
+		print(catZipDupes[['envelope_name', 'Address Line 1', 'cleanZip']])
 
 if args['stage'] == '3':
 	# Check new emails against the emails from last year
